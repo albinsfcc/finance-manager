@@ -1,0 +1,34 @@
+<svg width="210" height="48" viewBox="0 0 180 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M24 4L40 10V22C40 32 33 38 24 42C15 38 8 32 8 22V10L24 4Z"
+        fill="url(#grad1)"/>
+
+  <!-- Intelligent Line -->
+  <path d="M18 18C20 14 28 14 30 18C32 22 22 26 24 30"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none"/>
+
+  <!-- ₹ Bar -->
+  <line x1="24" y1="14" x2="24" y2="30"
+        stroke="white"
+        stroke-width="2"
+        stroke-linecap="round"/>
+
+  <!-- Text -->
+  <text x="60" y="30"
+        font-family="Google Sans Flex, sans-serif"
+        font-size="20"
+        fill="white"
+        font-weight="600">
+        Albin Finance 
+  </text>
+
+  <defs>
+    <linearGradient id="grad1" x1="8" y1="4" x2="40" y2="42" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22c55e"/>
+      <stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+</svg>
