@@ -33,6 +33,14 @@ export default function Sidebar({ currentPage, setPage }) {
         >
           Charts
         </button>
+        <button
+          onClick={() => {
+            window.location.reload();
+            setOpen(false);
+          }}
+        >
+          Update
+        </button>
       </div>
     </>
   );
