@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { setPin, verifyPin, hasPin } from "../auth";
+import { setPin, verifyPin, hasPin, resetPin } from "../auth";
 
 const PAD_LAYOUT = [
   [1, 2, 3],
@@ -54,6 +54,13 @@ export default function Login({ onLogin }) {
     }
   };
 
+  const handleResetPin = async () => {
+    await resetPin();
+    setPinInput("");
+    setCreateMode(true);
+    setError(false);
+  };
+
   return (
     <div className="center-screen">
       <div className={`login-card pin-pad-card ${error ? "pin-error" : ""}`}>
@@ -82,9 +89,10 @@ export default function Login({ onLogin }) {
                   aria-label={key === "delete" ? "Delete" : key.toString()}
                 >
                   {key === "delete" ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z" />
-                      <path d="M10 11v6M14 11v6" />
+                    <svg className="pin-delete-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+                      <line x1="18" y1="9" x2="12" y2="15" />
+                      <line x1="12" y1="9" x2="18" y2="15" />
                     </svg>
                   ) : (
                     key
@@ -95,6 +103,11 @@ export default function Login({ onLogin }) {
           ))}
         </div>
         {error && <p className="pin-error-msg">Wrong PIN</p>}
+        {!createMode && (
+          <button type="button" className="pin-reset-btn" onClick={handleResetPin}>
+            Reset PIN
+          </button>
+        )}
       </div>
     </div>
   );

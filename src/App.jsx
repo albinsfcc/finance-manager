@@ -2,6 +2,7 @@ import { useState } from "react";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Sidebar from "./components/Sidebar";
+import Charts from "./components/Charts";
 import "./styles.css";
 
 function App() {
@@ -16,13 +17,7 @@ function App() {
     <>
       <Sidebar currentPage={page} setPage={setPage} />
       {page === "dashboard" && <Dashboard />}
-      {page === "charts" && (
-        <div className="container main">
-          <div className="card">
-            <h2>Charts Coming Soon 📊</h2>
-          </div>
-        </div>
-      )}
+      {page === "charts" && <Charts />}
     </>
   );
 }

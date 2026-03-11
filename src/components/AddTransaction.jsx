@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { db } from "../db";
 
-export default function AddTransaction({ refresh }) {
+export default function AddTransaction({ refresh, editingTxn, clearEditing }) {
   const [amount, setAmount] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("expense");
   const [isAsset, setIsAsset] = useState(false);
   const [category, setCategory] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [allCategories, setAllCategories] = useState([]);
+  const [activeTab, setActiveTab] = useState("expense"); // "expense" | "fund"
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const isEditing = !!editingTxn;
 
   // 🔹 Load all categories once
   useEffect(() => {
@@ -34,20 +37,59 @@ export default function AddTransaction({ refresh }) {
     setSuggestions(filtered);
   }, [category, allCategories]);
 
-  const handleAdd = async () => {
+  // 🔹 Populate form when editing
+  useEffect(() => {
+    if (!editingTxn) return;
+
+    setAmount(editingTxn.amount != null ? String(editingTxn.amount) : "");
+    setName(editingTxn.name || "");
+    setDescription(editingTxn.description || "");
+    setCategory(editingTxn.category || "");
+    setIsAsset(!!editingTxn.isAsset);
+    setActiveTab(editingTxn.type === "fund" ? "fund" : "expense");
+    setShowAdvanced(true);
+  }, [editingTxn]);
+
+  const resetForm = () => {
+    setAmount("");
+    setName("");
+    setDescription("");
+    setCategory("");
+    setIsAsset(false);
+    setSuggestions([]);
+    setActiveTab("expense");
+    setShowAdvanced(false);
+  };
+
+  const handleSubmit = async () => {
     if (!amount || !name || !category) return;
 
     const trimmedCategory = category.trim();
 
-    await db.transactions.add({
+    const now = new Date();
+
+    const baseData = {
       amount: Number(amount),
       name,
       description,
-      type,
+      type: activeTab === "expense" ? "expense" : "fund",
       category: trimmedCategory,
-      isAsset,
-      date: new Date()
-    });
+      isAsset
+    };
+
+    if (isEditing && editingTxn?.id != null) {
+      await db.transactions.update(editingTxn.id, {
+        ...baseData,
+        lastModified: now
+      });
+    } else {
+      await db.transactions.add({
+        ...baseData,
+        creationDate: now,
+        lastModified: now,
+        date: now
+      });
+    }
 
     // 🔹 Save category if new
     const existing = await db.categories
@@ -60,25 +102,37 @@ export default function AddTransaction({ refresh }) {
       setAllCategories(prev => [...prev, trimmedCategory]);
     }
 
-    // Reset form
-    setAmount("");
-    setName("");
-    setDescription("");
-    setCategory("");
-    setIsAsset(false);
-    setSuggestions([]);
-
+    resetForm();
+    if (clearEditing) clearEditing();
     refresh();
   };
 
   return (
-    <div className="card">
-      <h3>Add Transaction</h3>
+    <div className="card" id="add-transaction">
+      <h3>{isEditing ? "Update Transaction" : "Add Transaction"}</h3>
+
+      <div className="txn-tabs">
+        <button
+          type="button"
+          className={`txn-tab  expense-tab ${activeTab === "expense" ? "active" : ""}`}
+          onClick={() => setActiveTab("expense")}
+        >
+          Expenditure
+        </button>
+        <button
+          type="button"
+          className={`txn-tab ${activeTab === "fund" ? "active" : ""}`}
+          onClick={() => setActiveTab("fund")}
+        >
+          Income
+        </button>
+      </div>
 
       <div className="form-group">
         <input
           placeholder="Amount"
-          type="number"
+          type="tel"
+          inputMode="decimal"
           value={amount}
           onChange={e => setAmount(e.target.value)}
         />
@@ -86,13 +140,13 @@ export default function AddTransaction({ refresh }) {
 
       <div className="form-group">
         <input
-          placeholder="Name"
+          placeholder="Label"
           value={name}
           onChange={e => setName(e.target.value)}
         />
       </div>
 
-      {/* 🔹 CATEGORY FIELD WITH AUTOSUGGEST */}
+      {/* Category is mandatory and always visible */}
       <div className="form-group category-wrapper">
         <input
           placeholder="Category"
@@ -118,34 +172,44 @@ export default function AddTransaction({ refresh }) {
         )}
       </div>
 
-      <div className="form-group">
-        <input
-          placeholder="Description (optional)"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-        />
-      </div>
+      {!isEditing && (
+        <button
+          type="button"
+          className="txn-advanced-toggle"
+          onClick={() => setShowAdvanced(prev => !prev)}
+        >
+          <span className={`txn-advanced-icon ${showAdvanced ? "open" : ""}`}>+</span>
+          <span className="txn-advanced-label">
+            {showAdvanced ? "Hide details" : "More details"}
+          </span>
+        </button>
+      )}
 
-      <div className="form-group">
-        <select value={type} onChange={e => setType(e.target.value)}>
-          <option value="expense">Expense</option>
-          <option value="fund">Fund</option>
-        </select>
-      </div>
+      {(showAdvanced || isEditing) && (
+        <div className="txn-advanced">
+          <div className="form-group">
+            <input
+              placeholder="Description (optional)"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            />
+          </div>
 
-      <div className="asset-row">
-        <label className="checkbox-wrapper">
-          <input
-            type="checkbox"
-            checked={isAsset}
-            onChange={e => setIsAsset(e.target.checked)}
-          />
-          <span>Mark as Asset</span>
-        </label>
-      </div>
+          <div className="asset-row">
+            <label className="checkbox-wrapper">
+              <input
+                type="checkbox"
+                checked={isAsset}
+                onChange={e => setIsAsset(e.target.checked)}
+              />
+              <span>Mark as Asset</span>
+            </label>
+          </div>
+        </div>
+      )}
 
-      <button className="primary-btn" onClick={handleAdd}>
-        Add Transaction
+      <button className="primary-btn" onClick={handleSubmit}>
+        {isEditing ? "Update Transaction" : "Add Transaction"}
       </button>
     </div>
   );

@@ -17,3 +17,7 @@ export async function hasPin() {
   const saved = await db.settings.get("pin");
   return !!saved;
 }
+
+export async function resetPin() {
+  await db.settings.delete("pin");
+}

@@ -66,11 +66,17 @@ body {
 
 .hamburger {
   font-size: 22px;
-  margin-right: 15px;
+  margin-right: 0;
   background: none;
   color: white;
   border: none;
   cursor: pointer;
+  padding-left: 0;
+}
+
+.topbar-logo img {
+  display: block;
+  height: 40px;
 }
 
 /* ============================= */
@@ -105,15 +111,97 @@ body {
 /* BALANCE */
 /* ============================= */
 
-.balance-amount {
-  font-size: 28px;
-  font-weight: 650;
-  margin-bottom: 8px;
+.balance-card {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(34,197,94,0.25), transparent 55%),
+    linear-gradient(145deg, #020617, #020617 35%, #0f172a 100%);
+  border: 1px solid rgba(148,163,184,0.25);
 }
 
-.sub-info {
-  font-size: 14px;
-  opacity: 0.7;
+.balance-card::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle at 0% 0%, rgba(56,189,248,0.18), transparent 55%);
+  opacity: 0.9;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.balance-card-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.balance-card-title {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.balance-card-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(15,23,42,0.9);
+  border: 1px solid rgba(148,163,184,0.35);
+  color: #e5e7eb;
+}
+
+.balance-amount-row {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.balance-amount-label {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.balance-amount {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #e5fff1;
+}
+
+.balance-breakdown {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.balance-breakdown-item {
+  flex: 1;
+}
+
+.balance-breakdown-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.balance-breakdown-value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.balance-breakdown-value.positive {
+  color: #4ade80;
+}
+
+.balance-breakdown-value.negative {
+  color: #f97373;
 }
 
 /* ============================= */
@@ -182,6 +270,81 @@ select:focus {
 }
 
 /* ============================= */
+/* ADD TRANSACTION TABS + FOLD  */
+/* ============================= */
+
+.txn-tabs {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: #020617;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.txn-tab {
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  width: 50%;
+}
+
+.txn-tab.active {
+  background: #22c55e;
+  color: #020617;
+  font-weight: 600;
+}
+
+.expense-tab.active {
+  background-color: #ef4444;
+}
+
+.txn-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: #38bdf8;
+  font-size: 13px;
+  cursor: pointer;
+  margin: 4px 0 10px;
+}
+
+.txn-advanced-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid #38bdf8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.txn-advanced-icon.open {
+  transform: rotate(45deg);
+  background: #38bdf8;
+  color: #020617;
+}
+
+.txn-advanced-label {
+  text-decoration: underline;
+}
+
+.txn-advanced {
+  margin-top: 8px;
+}
+
+/* ============================= */
 /* CHECKBOX */
 /* ============================= */
 
@@ -228,31 +391,175 @@ select:focus {
 /* ============================= */
 
 .txn-card {
-  background: linear-gradient(145deg, #0f1b2e, #0c1625);
-  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at top left, rgba(15,23,42,0.95), #020617);
+  padding: 14px 16px 12px;
   border-radius: 18px;
   margin-bottom: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  transition: 0.2s ease;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+  border: 1px solid rgba(30,64,175,0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .txn-card:hover {
   transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.6);
+  border-color: rgba(56,189,248,0.45);
 }
 
-.txn-top {
+.txn-card.selected {
+  border-color: rgba(56,189,248,0.7);
+}
+
+.txn-card.expense::before,
+.txn-card.fund::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.txn-card.expense::before {
+  background: radial-gradient(circle at 0 0, rgba(248,113,113,0.32), transparent 55%);
+}
+
+.txn-card.fund::before {
+  background: radial-gradient(circle at 0 0, rgba(74,222,128,0.32), transparent 55%);
+}
+
+/* ============================= */
+/* CHART IDEAS */
+/* ============================= */
+
+.charts-intro {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.charts-empty {
+  font-size: 13px;
+  margin-bottom: 14px;
+  color: #94a3b8;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (min-width: 560px) {
+  .charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chart-idea {
+  background: radial-gradient(circle at top left, rgba(15,23,42,0.95), #020617);
+  border-radius: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(148,163,184,0.35);
+}
+
+.chart-idea-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 6px;
 }
 
-.txn-top h4 {
-  font-size: 16px;
+.chart-idea-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chart-idea-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(34,197,94,0.12);
+  color: #4ade80;
+  border: 1px solid rgba(34,197,94,0.3);
+}
+
+.chart-idea-desc {
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.35;
+}
+
+.txn-top {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.txn-main h4 {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.txn-kind {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
 }
 
 .amount {
   font-weight: 600;
   font-size: 15px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15,23,42,0.85);
+}
+
+.txn-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.txn-action-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.5);
+  background: rgba(15,23,42,0.9);
+  color: #e5e7eb;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.txn-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.txn-action-btn.edit {
+  border-color: rgba(34,197,94,0.7);
+  color: #bbf7d0;
+}
+
+.txn-action-btn.edit:hover {
+  background: rgba(21,128,61,0.75);
+  border-color: rgba(34,197,94,0.95);
+}
+
+.txn-action-btn.delete {
+  border-color: rgba(248,113,113,0.7);
+  color: #fecaca;
+}
+
+.txn-action-btn.delete:hover {
+  background: rgba(127,29,29,0.7);
+  border-color: rgba(248,113,113,0.9);
 }
 
 .amount.expense {
@@ -429,18 +736,18 @@ select:focus {
 }
 
 .pin-keypad {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 16px 24px;
+  justify-content: center;
 }
 
 .pin-row {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+  display: contents;
 }
 
 .pin-key {
+  padding: 0;
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -473,6 +780,35 @@ select:focus {
 .pin-key-empty {
   visibility: hidden;
   pointer-events: none;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+}
+
+.pin-delete-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+  padding-top: 5px;
+  margin-top: 8px;
+}
+
+.pin-reset-btn {
+  margin-top: 24px;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pin-reset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 
 .pin-error-msg {

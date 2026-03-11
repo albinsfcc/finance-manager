@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="40" viewBox="0 0 260 40" fill="none">
+  <!-- Shield icon -->
+  <g transform="translate(-30 3)">
+    <path d="M16 1L30 6V16.5C30 24 24.5 28.5 16 32C7.5 28.5 2 24 2 16.5V6L16 1Z" fill="url(#pfmShieldGrad)"/>
+    <!-- Stylised trend line -->
+      
+
+  <!-- Top curve -->
+  <path d="M20 13c0-2-2-3-4-3s-4 1-4 3 2 3 4 3 4 1 4 3-2 3-4 3-4-1-4-3" stroke="#ECFEFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <!-- Vertical bar (₹ hint) -->
+    <line x1="16" y1="8" x2="16" y2="25" stroke="#ECFEFF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="10" y="24" fill="#E5E7EB" font-size="16" font-family="-apple-system, BlinkMacSystemFont, system-ui, 'SF Pro Display', 'Segoe UI', sans-serif" letter-spacing="0.14em" style="text-transform: uppercase;">
+    <tspan>PERSONAL </tspan>
+    <tspan fill="#22C55E">FINANCE </tspan>
+    <tspan>MANAGER</tspan>
+  </text>
+
+  <defs>
+    <linearGradient id="pfmShieldGrad" x1="2" y1="1" x2="30" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22C55E"/>
+      <stop offset="1" stop-color="#16A34A"/>
+    </linearGradient>
+  </defs>
+</svg>
